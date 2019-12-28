@@ -1,0 +1,44 @@
+Sub SavePdfAttachments()
+    Dim olApp           As Object
+    Dim olNS            As Object
+    Dim olFolder        As Object
+    Dim olItems         As Object
+    Dim olItem          As Object
+    Dim olAtt           As Object
+    Dim sSaveToFolder   As String
+    Dim Ans             As Long
+    
+    sSaveToFolder = "C:\Users\ojara\Documents\InformesExcelDPP" 'change the destination folder accordingly
+    
+    Set olApp = CreateObject("Outlook.Application")
+    Set olNS = olApp.GetNamespace("MAPI")
+    Set olFolder = olNS.Folders("Archivo de datos de Outlook").Folders("Bandeja de entrada").Folders("DPP") 'change the source folder accordingly
+    Set olItems = olFolder.Items
+    
+    For Each olItem In olItems
+        If olItem.Attachments.Count > 0 Then
+            For Each olAtt In olItem.Attachments
+                If Right(olAtt.FileName, 5) = ".xlsb" Then
+                    If Len(Dir(sSaveToFolder & olAtt.FileName)) = 0 Then
+                        olAtt.SaveAsFile sSaveToFolder & olAtt.FileName
+                        olItem.Save
+                    Else
+                        Ans = MsgBox(olAtt.FileName & " already exists.  Overwrite file?", vbQuestion + vbYesNo)
+                        If Ans = vbYes Then
+                            olAtt.SaveAsFile sSaveToFolder & olAtt.FileName
+                            olItem.Save
+                        End If
+                    End If
+                End If
+            Next olAtt
+        End If
+    Next olItem
+
+    Set olApp = Nothing
+    Set olNS = Nothing
+    Set olFolder = Nothing
+    Set olItems = Nothing
+    Set olItem = Nothing
+    Set olAtt = Nothing
+    
+End Sub
