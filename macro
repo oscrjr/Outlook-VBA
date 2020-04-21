@@ -8,7 +8,7 @@ Sub SavePdfAttachments()
     Dim sSaveToFolder   As String
     Dim Ans             As Long
     
-    sSaveToFolder = "C:\Users\ojara\Documents\InformesExcelDPP" 'change the destination folder accordingly
+    sSaveToFolder = "C:\Users\oscrjr\Documents\InformesExcel" 'change the destination folder accordingly
     
     Set olApp = CreateObject("Outlook.Application")
     Set olNS = olApp.GetNamespace("MAPI")
@@ -18,7 +18,7 @@ Sub SavePdfAttachments()
     For Each olItem In olItems
         If olItem.Attachments.Count > 0 Then
             For Each olAtt In olItem.Attachments
-                If Right(olAtt.FileName, 5) = ".xlsb" Then
+                If Right(olAtt.FileName, 5) = ".xlsb" Then 'change the filetype accordingly
                     If Len(Dir(sSaveToFolder & olAtt.FileName)) = 0 Then
                         olAtt.SaveAsFile sSaveToFolder & olAtt.FileName
                         olItem.Save
